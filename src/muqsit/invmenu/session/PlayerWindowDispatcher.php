@@ -14,6 +14,7 @@ use pocketmine\inventory\Inventory;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\ContainerClosePacket;
 use pocketmine\network\mcpe\protocol\ContainerOpenPacket;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\inventory\WindowTypes;
 use pocketmine\scheduler\ClosureTask;
@@ -56,6 +57,9 @@ final class PlayerWindowDispatcher{
 			$success = $success && $this->info->graphic->sendInventory($this->session->player, $this->info->menu->getInventory());
 			if($success){
 				$this->session->current = $this->info;
+				if($this->session->player->getNetworkSession()->getProtocolId() < ProtocolInfo::PROTOCOL_1_16_100){
+					$this->setResult(true);
+				}
 			}else{
 				$this->setResult(false);
 			}
