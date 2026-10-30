@@ -54,9 +54,14 @@ final class InvMenuEventHandler implements Listener{
 			// these are not magic numbers. 255 (windowId) is supposed to be ContainerIds::NONE (-1) but it appears
 			// either pocketmine or mojang wrongly encodes/decodes the packet. the same applies to 247 (windowType)
 			// which actually is WindowTypes::NONE (-9).
-			if(!$packet->server && $packet->windowId === 255 && $packet->windowType === 247){
+			if(!$packet->server && $packet->windowId === 255){
 				$player = $event->getOrigin()->getPlayer();
-				if($player !== null && $this->player_manager->getNullable($player)?->dispatcher !== null){
+				if(
+					$player !== null &&
+					isset($packet->windowType) &&
+					$packet->windowType === 247 &&
+					$this->player_manager->getNullable($player)?->dispatcher !== null
+				){
 					$event->cancel();
 				}
 			}
