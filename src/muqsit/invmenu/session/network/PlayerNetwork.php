@@ -102,7 +102,7 @@ final class PlayerNetwork{
 		if($entry !== null){
 			if($this->network_session->sendDataPacket(NetworkStackLatencyPacket::create($entry->network_timestamp, true))){
 				$entry->sent_at = microtime(true) * 1000;
-				if($this->network_session->getProtocolId() < ProtocolInfo::PROTOCOL_1_20_0){
+				if($this->network_session->getProtocolId() <= ProtocolInfo::PROTOCOL_1_20_0){
 					$this->legacy_ack_timeout = InvMenuHandler::getRegistrant()->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use($entry) : void{
 						// Legacy clients can occasionally miss latency ACKs. Don't let one missed ACK permanently stall the queue.
 						if($this->current === $entry){
